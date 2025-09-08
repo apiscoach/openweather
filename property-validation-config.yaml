@@ -13,7 +13,7 @@ validation_rules:
       - "BU1"
       - "BU2"
       - "BU3"
-      - "Engie""
+      - "Engie"
     
   
   # Add more properties as needed
