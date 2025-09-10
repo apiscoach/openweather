@@ -57,16 +57,16 @@ jobs:
           echo "Found api.yaml: $API_YAML"
           echo "api_yaml_path=$API_YAML" >> $GITHUB_OUTPUT
 
-      - name: Run YAML lint with vacuum
-        uses: pb33f/vacuum-action@v2
-        with:
-          openapi_path: '${{ steps.extract-api.outputs.api_yaml_path }}'
-          ruleset: 'wso2-rulesets/rules/propertiesValidation.yml'
-          show_rules: true
-          fail_on_error: true
-          minimum_score: 20
-          print_logs: true
-          github_token: ${{ secrets.GITHUB_TOKEN }}   
+      # - name: Run YAML lint with vacuum
+      #   uses: pb33f/vacuum-action@v2
+      #   with:
+      #     openapi_path: '${{ steps.extract-api.outputs.api_yaml_path }}'
+      #     ruleset: 'wso2-rulesets/rules/propertiesValidation.yml'
+      #     show_rules: true
+      #     fail_on_error: true
+      #     minimum_score: 20
+      #     print_logs: true
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}   
 
       - name: Validate API properties with Spectral
         uses: stoplightio/spectral-action@latest
