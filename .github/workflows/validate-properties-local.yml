@@ -8,6 +8,10 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: read
+  checks: write
+
 jobs:
   validate-properties-spectral:
     runs-on: ubuntu-latest
