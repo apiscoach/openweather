@@ -76,7 +76,13 @@ jobs:
       - name: Install Spectral CLI
         run: npm install -g @stoplight/spectral-cli
 
-      - name: Validate API properties with Spectral CLI
+      - name: Validate OpenAPI Compliance with Spectral CLI
+        run: |
+          spectral lint '${{ steps.extract-api.outputs.api_yaml_path }}' \
+            --ruleset 'wso2-rulesets/rules/basicValidation.yaml' \
+            --format github-actions
+
+      - name: Validate API custom properties with Spectral CLI
         run: |
           spectral lint '${{ steps.extract-api.outputs.api_yaml_path }}' \
             --ruleset 'wso2-rulesets/rules/propertiesValidation.yml' \
