@@ -2,8 +2,6 @@ on:
   push:
     paths:
       - apim/**/Artifact/*.zip
-    branches:
-      - main
   workflow_dispatch:
 
 name: Build and Release API Repo
@@ -36,22 +34,11 @@ jobs:
             echo "Changed file: $file"
             break
           done
-  validate_props:
-    name: Validate Custom Properties
-    needs: print_changed_files
-    uses: isamauny-wso2/wso2-workflows/.github/workflows/validate-properties-spectral.yml@main
-    with:
-      zip_path: ${{ needs.print_changed_files.outputs.changed_file }}
-  validate_openapi:
-    name: Validate OpenAPI Compliance
-    needs: print_changed_files
-    uses: isamauny-wso2/wso2-workflows/.github/workflows/validate-compliance-apictl.yml@main
-    with:
-      zip_path: ${{ needs.print_changed_files.outputs.changed_file }}
+
   release_repo:
     name: Release Repo
-    needs: [ print_changed_files, validate_props ] 
-    uses: isamauny-wso2/wso2-workflows/.github/workflows/release-apim-api.yml@main
+    needs: [ print_changed_files ] 
+    uses: apiscoach/wso2-workflows/.github/workflows/release-apim-api.yml@main
     with:
       changed_file: ${{ needs.print_changed_files.outputs.changed_file }}
     secrets: inherit
