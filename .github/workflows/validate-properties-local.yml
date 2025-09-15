@@ -1,4 +1,4 @@
-name: Extract and Validate API Properties
+name: Validate API Definition and MetaData
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ permissions:
   checks: write
 
 jobs:
-  validate-properties-spectral:
+  validate-api-definition:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,11 +27,11 @@ jobs:
           path: 'wso2-rulesets'
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract API file from ZIP
+      - name: Extract API definition files from ZIP
         id: extract-api
         run: |
-          echo "Extracting API file from ZIP"
-          echo "============================"
+          echo "Extracting API definition files from ZIP"
+          echo "========================================"
 
           # Use the provided ZIP file path
           ZIP_FILE="${{ inputs.zip_path }}"
@@ -48,7 +48,6 @@ jobs:
 
           # Find api.yaml
           API_YAML=$(find ./extracted-api -name "api.yaml" -type f)
-
           if [[ -z "$API_YAML" ]]; then
             echo "Error: api.yaml not found in ZIP file"
             exit 1
@@ -56,6 +55,20 @@ jobs:
 
           echo "Found api.yaml: $API_YAML"
           echo "api_yaml_path=$API_YAML" >> $GITHUB_OUTPUT
+
+          # Find swagger.yaml in Definitions folder
+          SWAGGER_YAML=$(find ./extracted-api -path "*/Definitions/swagger.yaml" -type f)
+          if [[ -n "$SWAGGER_YAML" ]]; then
+            echo "Found swagger.yaml: $SWAGGER_YAML"
+            echo "swagger_yaml_path=$SWAGGER_YAML" >> $GITHUB_OUTPUT
+          else
+            echo "Warning: swagger.yaml not found in Definitions folder"
+            echo "swagger_yaml_path=" >> $GITHUB_OUTPUT
+          fi
+
+          # List extracted structure
+          echo "Extracted file structure:"
+          find ./extracted-api -type f | head -20
 
       # - name: Run YAML lint with vacuum
       #   uses: pb33f/vacuum-action@v2
@@ -78,9 +91,9 @@ jobs:
 
       - name: Validate OpenAPI Compliance with Spectral CLI
         run: |
-          spectral lint '${{ steps.extract-api.outputs.api_yaml_path }}' \
-            --ruleset 'wso2-rulesets/rules/basicValidation.yaml' \
-            --format github-actions
+          spectral lint '${{ steps.extract-api.outputs.swagger_yaml_path }}' \
+              --ruleset 'wso2-rulesets/rules/basicValidation.yaml' \
+              --format github-actions
 
       - name: Validate API custom properties with Spectral CLI
         run: |
