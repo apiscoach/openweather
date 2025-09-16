@@ -2,6 +2,9 @@ on:
   push:
     paths:
       - apim/**/Artifact/*.zip
+    branches:
+      - main
+
   workflow_dispatch:
 
 name: Build and Release API Repo
