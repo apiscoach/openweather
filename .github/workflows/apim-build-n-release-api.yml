@@ -16,7 +16,7 @@ jobs:
     outputs:
       changed_file: ${{ steps.extract-file.outputs.changed_file }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v47 # v47

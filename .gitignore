@@ -1,1 +1,3 @@
 .DS_Store
+sequences/endpoint-mapping-config.md
+sequences/llm-routing-sequence.xml
